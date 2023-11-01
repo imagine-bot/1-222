@@ -12,7 +12,7 @@ interface ProductData {
   description: string;
   price: number;
   quantity: number;
-  imageUrl: string;
+  imageUrls: string[];
   reviews: Review[];
 }
 
@@ -24,7 +24,11 @@ const products: ProductData[] = [
     description: "This is product 1",
     price: 100,
     quantity: 10,
-    imageUrl: "https://source.unsplash.com/random",
+    imageUrls: [
+      "https://source.unsplash.com/random",
+      "https://source.unsplash.com/random",
+      "https://source.unsplash.com/random"
+    ],
     reviews: [
       {
         user: "User 1",

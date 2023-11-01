@@ -16,12 +16,13 @@ interface ProductData {
   description: string;
   price: number;
   quantity: number;
-  imageUrl: string;
+  imageUrls: string[];
   reviews: Review[];
 }
 
 const Product: React.FC<ProductProps> = ({ sku }) => {
   const [product, setProduct] = useState<ProductData | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     fetch(`/api/products/${sku}`)
@@ -33,10 +34,22 @@ const Product: React.FC<ProductProps> = ({ sku }) => {
     return <div>Loading...</div>;
   }
 
+  const handleNextImage = () => {
+    setCurrentImageIndex((currentImageIndex + 1) % product.imageUrls.length);
+  };
+
+  const handlePreviousImage = () => {
+    setCurrentImageIndex((currentImageIndex - 1 + product.imageUrls.length) % product.imageUrls.length);
+  };
+
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-lg max-w-md mx-auto">
       <div className="flex justify-center pt-4">
-        <img className="h-48 w-full object-cover" src={product.imageUrl} alt={product.name} />
+        <div className="relative h-48 w-full">
+          <img className="absolute top-0 left-0 h-48 w-full object-cover" src={product.imageUrls[currentImageIndex]} alt={product.name} />
+          <button className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-1 rounded-full" onClick={handlePreviousImage}>Prev</button>
+          <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-1 rounded-full" onClick={handleNextImage}>Next</button>
+        </div>
       </div>
       <div className="px-5 py-3">
         <h3 className="text-gray-700 uppercase">{product.name}</h3>
